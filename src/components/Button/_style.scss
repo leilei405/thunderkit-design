@@ -1,0 +1,97 @@
+.btn {
+  position: relative;
+  display: inline-block;
+  font-weight: $btn-font-weight;
+  line-height: $btn-line-height;
+  color: $body-color;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none;
+  border: $btn-border-width solid transparent;
+  @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $border-radius);
+  box-shadow: $btn-box-shadow;
+  cursor: pointer;
+  transition: $btn-transition;
+  &.disabled,
+  &[disabled] {
+      cursor: not-allowed;
+      opacity: $btn-disabled-opacity;
+      box-shadow: none;
+      > * {
+          pointer-events: none;
+      }
+  }
+}
+
+// Small Button Style
+.btn-sm {
+  @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+}
+
+// Large Button Style
+.btn-lg {
+  @include button-size($btn-padding-y-lg, $btn-padding-y-lg, $btn-font-size-lg, $btn-border-radius-lg);
+}
+
+// Default Type Button Style
+.btn-default {
+  @include button-style($white, $gray-400, $body-color, $white, $primary, $primary)
+}
+
+// Primary Type Button Style
+.btn-primary {
+  @include button-style($primary, $primary, $white)
+}
+
+// Danger Type Button Style
+.btn-danger {
+  @include button-style($danger, $danger, $white)
+}
+
+// Success Type Button Style
+.btn-success {
+  @include button-style($success, $success, $white)
+}
+
+// Waring Type Button Style
+.btn-warning {
+  @include button-style($warning, $warning, $white)
+}
+
+// Info Type Button Style
+.btn-info {
+  @include button-style($info, $info, $white)
+}
+
+// Secondary Type Button Style
+.btn-secondary {
+  @include button-style($secondary, $secondary, $white)
+}
+
+// Light Type Button Style
+.btn-light {
+  @include button-style($light, $light, $black)
+}
+
+// Dark Type Button Style
+.btn-dark {
+  @include button-style($dark, $dark, $white)
+}
+
+// Link Type Button Style
+.btn-link {
+  font-weight: $font-weight-normal;
+  color: $btn-link-color;
+  text-decoration: $link-decoration;
+  box-shadow: none;
+  &:hover {
+      color: $btn-link-hover-color;
+      text-decoration: $link-hover-decoration;
+  }
+  &:focus,
+  &.focus {
+      text-decoration: $link-hover-decoration;
+      box-shadow: none;
+  }
+}
