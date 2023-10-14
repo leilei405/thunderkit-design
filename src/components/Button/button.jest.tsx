@@ -24,17 +24,16 @@ const testDisabledProps: ButtonProps = {
 describe('测试Button组件', () => {
     it('默认按钮Default测试', () => {
         const wrapper = render(<Button {...defaultProps}>Success</Button>)
-        const element = wrapper.getByText('Success') as HTMLElement
-        expect(element).toBeInTheDocument();
+        const element = wrapper.getByText('Success') as HTMLButtonElement
+        expect(element).toBeInTheDocument(); // 在文档中
         expect(element.tagName).toEqual('BUTTON');
         expect(element).toHaveClass('btn btn-default');
-        // expect(element.disabled).toBeTruthy();
         fireEvent.click(element);
         expect(defaultProps.onClick).toHaveBeenCalled(); // 事件被调用到了
     })
 
     it('link按钮测试', () => {
-        const wrapper = render(<Button btnType='link' href="http://dummyurl">Link</Button>)
+        const wrapper = render(<Button btnType='link' href="http://www.baidu.com">Link</Button>)
         const element = wrapper.getByText('Link')
         expect(element).toBeInTheDocument()
         expect(element.tagName).toEqual('A')
@@ -54,6 +53,6 @@ describe('测试Button组件', () => {
         const wrapper = render(<Button {...testButtonProps}>success</Button>)
         const element = wrapper.getByText('success')
         expect(element).toBeInTheDocument()
-        expect(element).toHaveClass('klass')
+        expect(element).toHaveClass('btn-primary btn-lg klass')
     })
 })

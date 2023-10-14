@@ -4,7 +4,7 @@ import Button from './button';
 export const ButtonUseCom: FC = () => {
     return (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 100 }}>
-            <Button btnType='default'>按钮</Button>
+            <Button btnType='default'>Success</Button>
             <Button btnType='danger'>danger按钮</Button>
             <Button btnType='dark'>dark按钮</Button>
             <Button btnType='info'>info按钮</Button>
