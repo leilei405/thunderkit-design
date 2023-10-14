@@ -17,7 +17,7 @@ const Menu: FC<MenuProps> = (props) => {
         }
     }
 
-    const classes = classNames('thunderkit-design', className, {
+    const classes = classNames('thunderkit-design-menu', className, {
         'menu-vertical': mode === 'vertical'
     })
 
@@ -25,8 +25,9 @@ const Menu: FC<MenuProps> = (props) => {
         index:  currentActive || 0,
         onSelect: handleClick,
     }
+    
     return (
-        <ul className={classes} style={style}>
+        <ul className={classes} style={style} data-testid="test-menu">
             <MenuContext.Provider value={passedContext}>
                 { children }
             </MenuContext.Provider>
