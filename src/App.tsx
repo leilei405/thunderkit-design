@@ -1,10 +1,13 @@
 import React from 'react';
 import { ButtonUseCom } from './components/Button/ButtonUse'
-function App() {
+import { MenuUseCom } from './components/Menu/MenuUse'
+
+const App = () => {
   return (
     <div className="App">
       <header className="App-header">
         <ButtonUseCom />
+        <MenuUseCom />
       </header>
     </div>
   );

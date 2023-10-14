@@ -1,4 +1,4 @@
-import React, { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react'
+import React, { ReactNode, AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react'
 
 
 export type ButtonSize = 'lg' | 'sm'
@@ -12,7 +12,7 @@ interface BaseButtonProps {
     className?: string;
     disabled?: boolean;
     btnType?: ButtonType;
-    children: React.ReactNode;
+    children: ReactNode;
 }
 
 type NativeButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLElement>
