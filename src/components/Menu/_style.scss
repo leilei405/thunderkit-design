@@ -49,7 +49,7 @@
         transform: rotate(180deg) !important;
       }
     }
-    .viking-submenu {
+    .thunderkit-submenu {
       //display: none;
       list-style:none;
       padding-left: 0;
@@ -65,7 +65,7 @@
         }
       }
     }
-    .viking-submenu.menu-opened {
+    .thunderkit-submenu.menu-opened {
       //display: block;
     }
   }
@@ -73,7 +73,7 @@
     >.menu-item {
       border-bottom: $menu-item-active-border-width solid transparent;
     }
-    .viking-submenu {
+    .thunderkit-submenu {
       position: absolute;
       background: $white;
       z-index: 100;

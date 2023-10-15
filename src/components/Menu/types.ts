@@ -25,6 +25,14 @@ export interface MenuItemProps {
     style?: React.CSSProperties;
 }
 
+// subMenuProps
+export interface SubMenuProps {
+    index?: number;
+    title?: string;
+    className?: string;
+    children?: ReactNode;
+}
+
 export const MenuContext = createContext<IMenuContext>({ index: 0 });
 
 export interface IMenuContext {
