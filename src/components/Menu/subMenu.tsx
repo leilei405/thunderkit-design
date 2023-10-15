@@ -1,4 +1,11 @@
-import React, { FC, useContext, FunctionComponentElement, Children } from 'react';
+import { 
+    FC, 
+    useContext, 
+    FunctionComponentElement, 
+    Children, 
+    useState, 
+    MouseEvent 
+} from 'react';
 
 import classNames from 'classnames';
 
@@ -9,11 +16,47 @@ const SubMenu:FC<SubMenuProps> = (props) => {
     
     const context = useContext(MenuContext)
 
+    const [menuOpen, setMenuOpen] = useState(false)
+
     const classes = classNames('menu-item submenu-item', className, {
         'is-active': context.index === index
     })
 
+    const handleClick = (e: MouseEvent) => {
+        e.preventDefault();
+        setMenuOpen(!menuOpen)
+    }
+
+    let timer: any
+    const handleMouseDown = (e: MouseEvent, toggle: boolean) => {
+        clearTimeout(timer)
+        e.preventDefault()
+        timer = setTimeout(() => {
+            setMenuOpen(toggle)
+        }, 300)
+    }
+
+    // true === 纵向 否则 {} ->
+    const clickEvents = context.mode === 'vertical' && {
+        onClick: handleClick
+    }
+
+    // 鼠标移动上去和离开的时候  !{}
+    const hoverEvents = context.mode !== 'vertical' && {
+        onMouseEnter: (e: MouseEvent) => {
+            handleMouseDown(e, true)
+        },
+        onMouseLeave: (e: MouseEvent) => {
+            handleMouseDown(e, false)
+        }
+    }
+
     const renderChildren = () => {
+
+        const subMenuClasses = classNames('thunderkit-submenu', {
+            'menu-opened': menuOpen
+        })
+
         const childrenComponent = Children.map(children, (child, index) => {
             const childElement = child as FunctionComponentElement<MenuItemProps>
             const { displayName } = childElement.type
@@ -24,7 +67,7 @@ const SubMenu:FC<SubMenuProps> = (props) => {
             }
         })
         return (
-            <ul className='thunderkit-submenu'>
+            <ul className={subMenuClasses}>
                 { childrenComponent }
             </ul>
         )
@@ -32,8 +75,8 @@ const SubMenu:FC<SubMenuProps> = (props) => {
 
 
     return (
-        <li key={index} className={classes}>
-            <div className='submenu-title'>
+        <li key={index} className={classes} { ...hoverEvents }>
+            <div className='submenu-title' { ...clickEvents }>
                 { title }
             </div>
             { renderChildren() }

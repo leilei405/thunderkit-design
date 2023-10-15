@@ -25,6 +25,7 @@ const Menu: FC<MenuProps> = (props) => {
     const passedContext: IMenuContext = {
         index:  currentActive || 0,
         onSelect: handleClick,
+        mode: mode
     }
 
     // 在children上使用map是一个危险的事情

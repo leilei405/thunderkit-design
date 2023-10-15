@@ -38,4 +38,5 @@ export const MenuContext = createContext<IMenuContext>({ index: 0 });
 export interface IMenuContext {
     index: number;
     onSelect?: SelectCallback;
+    mode?: MenuMode;
 } 
