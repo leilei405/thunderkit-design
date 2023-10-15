@@ -6,6 +6,8 @@ import Menu from './menu';
 
 import MenuItem from './menuItem';
 
+import SubMenu from './subMenu';
+
 import { MenuProps } from './types'
 
 const MenuTestProps: MenuProps = {
@@ -32,8 +34,28 @@ const MenuDifferent = (props: MenuProps) => {
             <MenuItem>
                 third
             </MenuItem>
+            <SubMenu title='dropdown'>
+                <MenuItem>
+                    drop1
+                </MenuItem>
+            </SubMenu>
         </Menu>
     )
+}
+
+const createStyleFile = () => {
+    const cssFile: string = `
+        .thunderkit-submenu {
+            display: none;
+        }
+        .thunderkit-submenu.menu-opened {
+            display: block;
+        }
+    `
+    const style = document.createElement('style')
+    style.type = 'text/css'
+    style.innerHTML = cssFile
+    return style
 }
 
 let wrapper: RenderResult;
@@ -44,6 +66,7 @@ let disabledElement: HTMLElement;
 describe('Menu Component Test', () => {
     beforeEach(() => {
         wrapper = render(MenuDifferent(MenuTestProps));
+        wrapper.container.append(createStyleFile())
         menuElement= wrapper.getByTestId('test-menu');
         activeElement = wrapper.getByText('active');
         disabledElement = wrapper.getByText('disabled');
@@ -52,7 +75,8 @@ describe('Menu Component Test', () => {
     it('测试默认属性会不会显示对应class', () => {
         expect(menuElement).toBeInTheDocument()
         expect(menuElement).toHaveClass('thunderkit-design-menu test')
-        expect(menuElement.getElementsByTagName('li').length).toEqual(3)
+        // expect(menuElement.getElementsByTagName('li').length).toEqual(5)
+        expect(menuElement.querySelectorAll(':scope > li').length).toEqual(4)
         expect(activeElement).toHaveClass('menu-item is-active')
         expect(disabledElement).toHaveClass('menu-item is-disabled')
     })
@@ -73,5 +97,19 @@ describe('Menu Component Test', () => {
         const wrapper = render(MenuDifferent(MenuTestVerProps));
         const menuElement = wrapper.getByTestId('test-menu');
         expect(menuElement).toHaveClass('menu-vertical')
+    })
+    it('默认横向的模式', async () => {
+        expect(wrapper.queryByText('drop1')).not.toBeVisible()
+        const dropdownElement = wrapper.getByText('dropdown')
+        fireEvent.mouseEnter(dropdownElement)
+        await waitFor (() => {
+            expect(wrapper.queryByText('drop1')).toBeVisible()
+        })
+        fireEvent.click(wrapper.getByText('drop1'))
+        expect(MenuTestProps.onSelect).toHaveBeenCalledWith('3-0')
+        fireEvent.mouseLeave(dropdownElement)
+        await waitFor (() => {
+            expect(wrapper.queryByText('drop1')).not.toBeVisible()
+        })
     })
 })
