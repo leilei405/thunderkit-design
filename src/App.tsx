@@ -1,6 +1,7 @@
 import React from 'react';
 import { ButtonUseCom } from './components/Button/ButtonUse'
 import { MenuUseCom } from './components/Menu/MenuUse'
+import { TabsUseCom } from './components/Tabs/TabsUse';
 
 const App = () => {
   return (
@@ -8,6 +9,7 @@ const App = () => {
       <header className="App-header">
         <ButtonUseCom />
         <MenuUseCom />
+        <TabsUseCom />
         <a
           className="App-link"
           href="https://reactjs.org"
