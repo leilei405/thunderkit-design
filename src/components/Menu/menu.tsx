@@ -5,12 +5,12 @@ import classNames from 'classnames';
 import { MenuProps, IMenuContext, MenuContext, MenuItemProps } from './types'
 
 const Menu: FC<MenuProps> = (props) => {
-    const { defaultIndex, className, mode, style, children, onSelect } = props
+    const { defaultIndex, className, mode, style, children, onSelect, defaultOpenSubmenus } = props
 
     const [currentActive, setCurrentActive] = useState(defaultIndex) // 当前点击的Menu
 
     // 获取当前点击的Index
-    const handleClick = (index: number) => {
+    const handleClick = (index: string) => {
         setCurrentActive(index)
         if (onSelect) {
             onSelect(index)
@@ -23,9 +23,10 @@ const Menu: FC<MenuProps> = (props) => {
     })
 
     const passedContext: IMenuContext = {
-        index:  currentActive || 0,
+        index:  currentActive || '0',
         onSelect: handleClick,
-        mode: mode
+        mode,
+        defaultOpenSubmenus
     }
 
     // 在children上使用map是一个危险的事情
@@ -36,7 +37,7 @@ const Menu: FC<MenuProps> = (props) => {
             const { displayName } = childElement.type
             if (displayName === 'MenuItem' || displayName === 'SubMenu') {
                 return cloneElement(childElement, {
-                    index
+                    index: index.toString(),
                 })
             } else {
                 console.error('Warning: Menu has a child which is not a MenuItem component')
@@ -54,7 +55,7 @@ const Menu: FC<MenuProps> = (props) => {
 }
 
 Menu.defaultProps = {
-    defaultIndex: 0,
+    defaultIndex: '0',
     mode: 'horizontal'
 }
 

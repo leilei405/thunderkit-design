@@ -9,13 +9,13 @@ import MenuItem from './menuItem';
 import { MenuProps } from './types'
 
 const MenuTestProps: MenuProps = {
-    defaultIndex: 0,
+    defaultIndex: '0',
     onSelect: jest.fn(),
     className: 'test'
 }
 
 const MenuTestVerProps: MenuProps = {
-    defaultIndex: 0,
+    defaultIndex: '0',
     mode: 'vertical',
 }
 
@@ -62,7 +62,7 @@ describe('Menu Component Test', () => {
         fireEvent.click(thirdItem)
         expect(thirdItem).toHaveClass('is-active')
         expect(activeElement).not.toHaveClass('is-active')
-        expect(MenuTestProps.onSelect).toHaveBeenCalledWith(2)
+        expect(MenuTestProps.onSelect).toHaveBeenCalledWith('2')
         fireEvent.click(disabledElement)
         expect(disabledElement).not.toHaveClass('is-active')
         expect(MenuTestProps.onSelect).not.toHaveBeenCalledWith('1')

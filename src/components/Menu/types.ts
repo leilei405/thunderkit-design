@@ -3,22 +3,23 @@ import React, { ReactNode, createContext } from 'react';
 type MenuMode = 'horizontal' | 'vertical';
 
 // SelectCallback
-type SelectCallback = (selectedIndex: number) => void
+type SelectCallback = (selectedIndex: string) => void
 
 // MenuProps
 export interface MenuProps {
-    defaultIndex?: number;
+    defaultIndex?: string;
     className?: string;
     mode?: MenuMode;
     style?: React.CSSProperties;
     children?: ReactNode;
     onSelect?: SelectCallback;
+    defaultOpenSubmenus?: string[];
 }
 
 
 // MenuItemProps
 export interface MenuItemProps {
-    index?: number;
+    index?: string;
     disabled?: boolean;
     className?: string;
     children?: ReactNode;
@@ -27,16 +28,17 @@ export interface MenuItemProps {
 
 // subMenuProps
 export interface SubMenuProps {
-    index?: number;
+    index?: string;
     title?: string;
     className?: string;
     children?: ReactNode;
 }
 
-export const MenuContext = createContext<IMenuContext>({ index: 0 });
-
 export interface IMenuContext {
-    index: number;
+    index: string;
     onSelect?: SelectCallback;
     mode?: MenuMode;
+    defaultOpenSubmenus?: string[];
 } 
+
+export const MenuContext = createContext<IMenuContext>({ index: '0' });

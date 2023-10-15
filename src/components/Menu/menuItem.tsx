@@ -15,7 +15,7 @@ const MenuItem: FC<MenuItemProps> = (props) => {
     })
 
     const handleClick = () => {
-        if (context.onSelect && !disabled && (typeof index === 'number')) {
+        if (context.onSelect && !disabled && (typeof index === 'string')) {
             context.onSelect(index)
         }
     }

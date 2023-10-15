@@ -4,7 +4,8 @@ import {
     FunctionComponentElement, 
     Children, 
     useState, 
-    MouseEvent 
+    MouseEvent, 
+    cloneElement
 } from 'react';
 
 import classNames from 'classnames';
@@ -16,7 +17,11 @@ const SubMenu:FC<SubMenuProps> = (props) => {
     
     const context = useContext(MenuContext)
 
-    const [menuOpen, setMenuOpen] = useState(false)
+    const openedSubMenus = context.defaultOpenSubmenus as Array<string>
+
+    const isOpened = (index && context.mode === 'vertical') ? openedSubMenus?.includes(index) : false
+
+    const [menuOpen, setMenuOpen] = useState(isOpened) 
 
     const classes = classNames('menu-item submenu-item', className, {
         'is-active': context.index === index
@@ -57,11 +62,13 @@ const SubMenu:FC<SubMenuProps> = (props) => {
             'menu-opened': menuOpen
         })
 
-        const childrenComponent = Children.map(children, (child, index) => {
+        const childrenComponent = Children.map(children, (child, i) => {
             const childElement = child as FunctionComponentElement<MenuItemProps>
             const { displayName } = childElement.type
             if (displayName === 'MenuItem') {
-                return childElement
+                return cloneElement(childElement, {
+                    index: `${index}-${i}`
+                })
             } else {
                 console.error('Warning: Menu has a child which is not a MenuItem component')
             }
