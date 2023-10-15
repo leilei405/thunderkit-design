@@ -15,7 +15,7 @@ const MenuItem: FC<MenuItemProps> = (props) => {
     })
 
     const handleClick = () => {
-        if (context.onSelect && !disabled) {
+        if (context.onSelect && !disabled && (typeof index === 'number')) {
             context.onSelect(index)
         }
     }
@@ -26,5 +26,8 @@ const MenuItem: FC<MenuItemProps> = (props) => {
         </li>
     )
 }
+
+// displayName  React 内置静态属性  帮助判断类型
+MenuItem.displayName = 'MenuItem'
 
 export default MenuItem

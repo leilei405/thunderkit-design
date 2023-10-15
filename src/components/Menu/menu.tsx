@@ -1,8 +1,8 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, Children, FunctionComponentElement, cloneElement } from 'react';
 
 import classNames from 'classnames';
 
-import { MenuProps, IMenuContext, MenuContext } from './types'
+import { MenuProps, IMenuContext, MenuContext, MenuItemProps } from './types'
 
 const Menu: FC<MenuProps> = (props) => {
     const { defaultIndex, className, mode, style, children, onSelect } = props
@@ -25,11 +25,27 @@ const Menu: FC<MenuProps> = (props) => {
         index:  currentActive || 0,
         onSelect: handleClick,
     }
-    
+    // 在children上使用map是一个危险的事情
+    // children不是一个透明的数据结构
+
+    const renderChildren = () => {
+        return Children.map(children, (child, index) => {
+            const childElement = child as FunctionComponentElement<MenuItemProps>
+            const { displayName } = childElement.type
+            if (displayName === 'MenuItem') {
+                return cloneElement(childElement, {
+                    index
+                })
+            } else {
+                console.error('Warning: Menu has a child which is not a MenuItem component')
+            }
+        })
+    }
+
     return (
         <ul className={classes} style={style} data-testid="test-menu">
             <MenuContext.Provider value={passedContext}>
-                { children }
+                { renderChildren() }
             </MenuContext.Provider>
         </ul>
     )
