@@ -8,13 +8,15 @@ import {
     cloneElement
 } from 'react';
 
-import { CSSTransition } from 'react-transition-group'
+// import { CSSTransition } from 'react-transition-group'
 
 import classNames from 'classnames';
 
 import { SubMenuProps, MenuContext, MenuItemProps } from './types'
+
 import Icon from '../Icon/icon';
 
+import Transition from '../Transition/transition';
 const SubMenu:FC<SubMenuProps> = (props) => {
     const { index, title, className, children } = props;
     
@@ -80,17 +82,18 @@ const SubMenu:FC<SubMenuProps> = (props) => {
         })
         return (
             // CSSTransition  动画组件
-            <CSSTransition
+            <Transition
                 in={menuOpen}
                 timeout={300} // active - down的时间
-                classNames='zoom-in-top' // 自定义的名称
-                appear // 菜单是否打开
-                unmountOnExit  // 
+                animation="zoom-in-top"
+                // classNames='zoom-in-top' // 自定义的名称
+                // appear // 菜单是否打开
+                // unmountOnExit  // 
             >
                 <ul className={subMenuClasses}>
                     { childrenComponent }
                 </ul>
-            </CSSTransition>
+            </Transition>
         )
     }
 
