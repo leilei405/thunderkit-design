@@ -11,6 +11,7 @@ import {
 import classNames from 'classnames';
 
 import { SubMenuProps, MenuContext, MenuItemProps } from './types'
+import Icon from '../Icon/icon';
 
 const SubMenu:FC<SubMenuProps> = (props) => {
     const { index, title, className, children } = props;
@@ -24,7 +25,9 @@ const SubMenu:FC<SubMenuProps> = (props) => {
     const [menuOpen, setMenuOpen] = useState(isOpened) 
 
     const classes = classNames('menu-item submenu-item', className, {
-        'is-active': context.index === index
+        'is-active': context.index === index,
+        'is-opened': menuOpen,
+        'is-vertical': context.mode === 'vertical'
     })
 
     const handleClick = (e: MouseEvent) => {
@@ -85,6 +88,7 @@ const SubMenu:FC<SubMenuProps> = (props) => {
         <li key={index} className={classes} { ...hoverEvents }>
             <div className='submenu-title' { ...clickEvents }>
                 { title }
+                <Icon icon='angle-down' className='arrow-icon' />
             </div>
             { renderChildren() }
         </li>
