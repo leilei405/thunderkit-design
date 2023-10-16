@@ -2,6 +2,7 @@ import React from 'react';
 import { ButtonUseCom } from './components/Button/ButtonUse'
 import { MenuUseCom } from './components/Menu/MenuUse'
 import { TabsUseCom } from './components/Tabs/TabsUse';
+import { IconUseCom } from './components/Icon/IconUse';
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
         <ButtonUseCom />
         <MenuUseCom />
         <TabsUseCom />
+        <IconUseCom />
         <a
           className="App-link"
           href="https://reactjs.org"
