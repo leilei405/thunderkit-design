@@ -85,6 +85,7 @@ const SubMenu:FC<SubMenuProps> = (props) => {
                 timeout={300} // active - down的时间
                 classNames='zoom-in-top' // 自定义的名称
                 appear // 菜单是否打开
+                unmountOnExit  // 
             >
                 <ul className={subMenuClasses}>
                     { childrenComponent }
