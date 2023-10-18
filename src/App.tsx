@@ -4,6 +4,7 @@ import { MenuUseCom } from './components/Menu/MenuUse'
 import { TabsUseCom } from './components/Tabs/TabsUse';
 import { IconUseCom } from './components/Icon/IconUse';
 import { AlertUseCom } from './components/Alert/AlertUse';
+import { InputUseCom } from './components/Input/InputUse';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <TabsUseCom />
         <IconUseCom />
         <AlertUseCom />
+        <InputUseCom />
         <a
           className="App-link"
           href="https://reactjs.org"
