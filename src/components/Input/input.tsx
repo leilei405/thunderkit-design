@@ -1,4 +1,4 @@
-import React, { FC, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 
 import classNames from 'classnames';
 
@@ -15,6 +15,19 @@ const Input =forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         'input-group-suffix': !!suffix,
         'input-group-prefix': !!prefix
     })
+
+    const fixControlledValue = (value: any) => {
+        if (typeof value === 'undefined' || value === null) {
+            return ''
+        }
+        return value
+    }
+
+    // 如果value值在props中
+    if ('value' in props) {
+        delete restProps.defaultValue
+        restProps.value = fixControlledValue(props.value)
+    }
 
     return (
         <div className={classes} style={style}>
