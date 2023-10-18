@@ -12,8 +12,8 @@ const Input =forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         [`input-size-${size}`]: size,
         'is-disabled': disabled,
         'input-group': prefix || suffix,
-        'input-group-suffix': !!suffix,
-        'input-group-prefix': !!prefix
+        'input-group-suffix': !!suffix, // 后缀
+        'input-group-prefix': !!prefix // 前缀
     })
 
     const fixControlledValue = (value: any) => {
@@ -23,7 +23,7 @@ const Input =forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         return value
     }
 
-    // 如果value值在props中
+    // 如果value值在props中 则删除
     if ('value' in props) {
         delete restProps.defaultValue
         restProps.value = fixControlledValue(props.value)
