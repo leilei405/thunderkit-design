@@ -5,6 +5,9 @@ import { AutoComplete } from './autoComplete';
 import { DataSourceType } from './types'
 
 export const AutoCompleteUseCom:FC = () => {
+
+    const arr = ['2', '3', '4', '5', '6']
+
     interface TestDataProps {
         value?: string;
         number?: number;
@@ -21,8 +24,12 @@ export const AutoCompleteUseCom:FC = () => {
         {value: '老师', number: 76, age: 32},
     ]
 
+    // const handleFetch = (query: string) => {
+    //     return testData.filter(item => item.value.includes(query))
+    // }
+
     const handleFetch = (query: string) => {
-        return testData.filter(item => item.value.includes(query))
+        return arr.filter(item => item.includes(query)).map(name=>({value: name}))
     }
 
     const renderOption = (item: DataSourceType<TestDataProps>) => {
