@@ -4,12 +4,16 @@ import React, { ChangeEvent, FC, useState } from 'react';
 
 import Input from '../Input/input'
 
+import Icon from '../Icon/icon';
+
 import { AutoCompleteProps, DataSourceType } from './types'
 
 export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const { onSelect, fetchSuggestions, value, renderOption, ...restProps } = props;
 
     const [inputValue, setInputValue] = useState(value);
+    
+    const [loading, setLoading] = useState(false)
 
     const [suggestions, setSuggestions] = useState<DataSourceType[]>([]);
     
@@ -20,8 +24,20 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
         const value = event.target.value.trim()
         setInputValue(value)
         if (value) {
+            // results  最开始返回的联合类型
+            // 经过instanceof 判断之后会自动分成俩种类型
             const results = fetchSuggestions(value)
-            setSuggestions(results)
+            // 判断如果是Promise则使用.then]
+            if (results instanceof Promise) {
+                console.log("Promise");
+                setLoading(true);
+                results.then(res => {
+                    setLoading(false)
+                    setSuggestions(res)
+                })
+            } else {
+                setSuggestions(results)
+            }
         } else {
             setSuggestions([]);
         }
@@ -71,6 +87,10 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
                 onChange={handleChange}
                 { ...restProps }
             />
+            {/* loading状态 */}
+            {
+                loading && <ul><Icon icon="spinner" spin /></ul>
+            }
             {
                 suggestions.length && generateDropdown()
             }
