@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useState, KeyboardEvent } from 'react';
+import React, { ChangeEvent, FC, useEffect, useState, KeyboardEvent, useRef } from 'react';
 
 import classNames from 'classnames';
 
@@ -9,6 +9,8 @@ import Icon from '../Icon/icon';
 import { AutoCompleteProps, DataSourceType } from './types'
 
 import useDebounce from '../../hooks/useDebounce';
+
+import useClickOutSide from '../../hooks/useClickOutSide';
 
 export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const { onSelect, fetchSuggestions, value, renderOption, ...restProps } = props;
@@ -22,11 +24,20 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const [currentIndex, setCurrentIndex] = useState(-1); // 当前的高亮
 
     const debounceValue = useDebounce(inputValue, 300)
-    
-    console.log(suggestions);
 
+    // 用来解决按下回车和点击选中某一项之后不触发二次搜索
+    const enterOrEnterTrigger = useRef(false)
+
+    // 解决点击组件外关闭下拉的筛选项
+    const componentRef = useRef<HTMLDivElement>(null)
+
+    // 封装自定义hooks解决点击组件外关闭下拉的筛选项
+    useClickOutSide(componentRef, () => {
+        setSuggestions([])
+    })
+    
     useEffect(() => {
-        if (debounceValue) {
+        if (debounceValue && enterOrEnterTrigger.current) {
             // results  最开始返回的联合类型
             // 经过instanceof 判断之后会自动分成俩种类型
             const results = fetchSuggestions(debounceValue)
@@ -51,6 +62,7 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value.trim()
         setInputValue(value)
+        enterOrEnterTrigger.current = true
     }
 
     // 点击将选中的item填充到input中
@@ -60,6 +72,7 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
         if (onSelect) {
             onSelect(item)
         }
+        enterOrEnterTrigger.current = false
     }
 
     // 以模版渲染
@@ -137,7 +150,10 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     }
 
     return (
-        <div className="thunderkit-auto-complete">
+        <div 
+            className="thunderkit-auto-complete"
+            ref={componentRef}
+        >
             <Input 
                 value={inputValue}
                 onChange={handleChange}
