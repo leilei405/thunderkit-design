@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { AutoComplete } from './autoComplete';
+import AutoComplete from './autoComplete';
 
 import { DataSourceType } from './types'
 
