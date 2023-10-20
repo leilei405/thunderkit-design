@@ -6,6 +6,7 @@ import { IconUseCom } from './components/Icon/IconUse';
 import { AlertUseCom } from './components/Alert/AlertUse';
 import { InputUseCom } from './components/Input/InputUse';
 import { AutoCompleteUseCom } from './components/AutoComplete/autoCompleteUse';
+import { SelectUseCom } from './components/Select/selectUseCom';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <AlertUseCom />
         <InputUseCom />
         <AutoCompleteUseCom />
+        <SelectUseCom />
         <a
           className="App-link"
           href="https://reactjs.org"
