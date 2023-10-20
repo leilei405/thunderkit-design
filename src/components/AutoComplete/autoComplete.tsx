@@ -1,6 +1,6 @@
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useState, KeyboardEvent } from 'react';
 
-// import classNames from 'classnames';
+import classNames from 'classnames';
 
 import Input from '../Input/input'
 
@@ -18,6 +18,8 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const [loading, setLoading] = useState(false)
 
     const [suggestions, setSuggestions] = useState<DataSourceType[]>([]);
+
+    const [currentIndex, setCurrentIndex] = useState(-1); // 当前的高亮
 
     const debounceValue = useDebounce(inputValue, 300)
     
@@ -42,6 +44,7 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
         } else {
             setSuggestions([]);
         }
+        setCurrentIndex(-1)
     }, [debounceValue])
 
     // 在Input输入的时候进行源数据的筛选
@@ -50,7 +53,7 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
         setInputValue(value)
     }
 
-    // 将选中的item填充到input中
+    // 点击将选中的item填充到input中
     const handleSelect = (item: DataSourceType) => {
         setInputValue(item.value)
         setSuggestions([])
@@ -68,15 +71,18 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
         );
     }
 
-
     // 展示搜索到的内容
     const generateDropdown = () => {
         return (
             <ul>
                 {suggestions.map((item, idx) => {
+                    const classes = classNames('suggestion-item', {
+                        'item-highlighted': idx === currentIndex
+                    })
                     return (
                         <li 
                             key={idx}
+                            className={classes}
                             onClick={() => handleSelect(item)}
                         >
                             { renderTemplate(item) }
@@ -87,11 +93,55 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
         )
     }
 
+    const currentHighlight = (index: number) => {
+        if (index < 0) index = 0
+        if (index >= suggestions.length) {
+            index = suggestions.length - 1
+        } 
+        setCurrentIndex(index)
+    }
+
+    // 回车
+    const handleEnter = () => {
+        return suggestions[currentIndex] && handleSelect(suggestions[currentIndex]);
+    };
+    
+    // 上键
+    const handleArrowUp = () => {
+        currentHighlight(currentIndex - 1);
+    };
+    
+    // 下键
+    const handleArrowDown = () => {
+        currentHighlight(currentIndex + 1);
+    };
+    
+    // ESC键
+    const handleEsc = () => {
+        setSuggestions([]);
+    };
+
+    // 键盘按下事件
+    const handleKeyDown = (key: KeyboardEvent<HTMLInputElement>) => {
+        const keyHandlers: { [key: number]: () => void } = {
+            13: handleEnter,      // Enter
+            38: handleArrowUp,    // Arrow Up
+            40: handleArrowDown,  // Arrow Down
+            27: handleEsc,        // Esc
+        };
+    
+        const keyHandler = keyHandlers[key.keyCode];
+        if (keyHandler) {
+            keyHandler();
+        }
+    }
+
     return (
         <div className="thunderkit-auto-complete">
             <Input 
                 value={inputValue}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 { ...restProps }
             />
             {/* loading状态 */}

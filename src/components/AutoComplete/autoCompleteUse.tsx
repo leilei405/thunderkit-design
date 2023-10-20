@@ -59,8 +59,8 @@ export const AutoCompleteUseCom:FC = () => {
      const renderOption = (item: DataSourceType<GithubUserProps>) => {
         return (
             <>
-                <h2>Name: {item.login}</h2>
-                <h2>url: {item.url}</h2>
+                <h2>{item.login}</h2>
+                {/* <h2>url: {item.url}</h2> */}
             </>
         )
     }
