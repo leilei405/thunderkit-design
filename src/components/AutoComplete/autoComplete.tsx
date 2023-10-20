@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 
 // import classNames from 'classnames';
 
@@ -8,25 +8,26 @@ import Icon from '../Icon/icon';
 
 import { AutoCompleteProps, DataSourceType } from './types'
 
+import useDebounce from '../../hooks/useDebounce';
+
 export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const { onSelect, fetchSuggestions, value, renderOption, ...restProps } = props;
 
-    const [inputValue, setInputValue] = useState(value);
+    const [inputValue, setInputValue] = useState(value as string);
     
     const [loading, setLoading] = useState(false)
 
     const [suggestions, setSuggestions] = useState<DataSourceType[]>([]);
+
+    const debounceValue = useDebounce(inputValue, 300)
     
     console.log(suggestions);
 
-    // 在Input输入的时候进行源数据的筛选
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value.trim()
-        setInputValue(value)
-        if (value) {
+    useEffect(() => {
+        if (debounceValue) {
             // results  最开始返回的联合类型
             // 经过instanceof 判断之后会自动分成俩种类型
-            const results = fetchSuggestions(value)
+            const results = fetchSuggestions(debounceValue)
             // 判断如果是Promise则使用.then]
             if (results instanceof Promise) {
                 console.log("Promise");
@@ -41,6 +42,12 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
         } else {
             setSuggestions([]);
         }
+    }, [debounceValue])
+
+    // 在Input输入的时候进行源数据的筛选
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value.trim()
+        setInputValue(value)
     }
 
     // 将选中的item填充到input中
