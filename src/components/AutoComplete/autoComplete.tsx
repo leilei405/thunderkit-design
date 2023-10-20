@@ -15,7 +15,7 @@ import useClickOutSide from '../../hooks/useClickOutSide';
 // 添加动画效果
 import Transition from '../Transition/transition';
 
-export const AutoComplete: FC<AutoCompleteProps> = (props) => {
+const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const { onSelect, fetchSuggestions, value, renderOption, ...restProps } = props;
 
     const [inputValue, setInputValue] = useState(value as string);
@@ -197,3 +197,5 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
         </div>
     )
 }
+
+export default AutoComplete
