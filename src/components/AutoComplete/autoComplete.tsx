@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useState, KeyboardEvent, useRef } from 'react';
+import { ChangeEvent, FC, useEffect, useState, KeyboardEvent, useRef } from 'react';
 
 import classNames from 'classnames';
 
@@ -12,6 +12,9 @@ import useDebounce from '../../hooks/useDebounce';
 
 import useClickOutSide from '../../hooks/useClickOutSide';
 
+// 添加动画效果
+import Transition from '../Transition/transition';
+
 export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const { onSelect, fetchSuggestions, value, renderOption, ...restProps } = props;
 
@@ -22,6 +25,9 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     const [suggestions, setSuggestions] = useState<DataSourceType[]>([]);
 
     const [currentIndex, setCurrentIndex] = useState(-1); // 当前的高亮
+
+    // 下拉的展示
+    const [ showDropdown, setShowDropdown] = useState(false)
 
     const debounceValue = useDebounce(inputValue, 300)
 
@@ -42,21 +48,28 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
             // 经过instanceof 判断之后会自动分成俩种类型
             const results = fetchSuggestions(debounceValue)
             // 判断如果是Promise则使用.then]
-            if (results instanceof Promise) {
-                console.log("Promise");
+            if (results instanceof Promise) {  // 异步
                 setLoading(true);
                 results.then(res => {
                     setLoading(false)
                     setSuggestions(res)
+                    if (res.length) {
+                        setShowDropdown(true)
+                    }
                 })
-            } else {
+            } else {  // 同步
                 setSuggestions(results)
+                setShowDropdown(true)
+                if (results.length > 0) {
+                    setShowDropdown(true)
+                } 
             }
         } else {
             setSuggestions([]);
+            setShowDropdown(false)
         }
         setCurrentIndex(-1)
-    }, [debounceValue])
+    }, [debounceValue, fetchSuggestions])
 
     // 在Input输入的时候进行源数据的筛选
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +81,8 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     // 点击将选中的item填充到input中
     const handleSelect = (item: DataSourceType) => {
         setInputValue(item.value)
-        setSuggestions([])
+        setSuggestions([]);
+        setShowDropdown(false);
         if (onSelect) {
             onSelect(item)
         }
@@ -87,22 +101,34 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     // 展示搜索到的内容
     const generateDropdown = () => {
         return (
-            <ul>
-                {suggestions.map((item, idx) => {
-                    const classes = classNames('suggestion-item', {
-                        'item-highlighted': idx === currentIndex
-                    })
-                    return (
-                        <li 
-                            key={idx}
-                            className={classes}
-                            onClick={() => handleSelect(item)}
-                        >
-                            { renderTemplate(item) }
-                        </li>
-                    )
-                })}
-            </ul>
+            <Transition
+                in={showDropdown || loading}
+                animation="zoom-in-top"
+                timeout={300}
+                onExited={() => {setSuggestions([])}}
+            >
+                <ul className="thunderkit-suggestion-list">
+                    {loading && 
+                        <div className="suggestions-loading-icon">
+                            <Icon icon={"spinner"} spin />
+                        </div>
+                    }
+                    {suggestions.map((item, idx) => {
+                        const classes = classNames('suggestion-item', {
+                            'is-active': idx === currentIndex
+                        })
+                        return (
+                            <li 
+                                key={idx}
+                                className={classes}
+                                onClick={() => handleSelect(item)}
+                            >
+                                { renderTemplate(item) }
+                            </li>
+                        )
+                    })}
+                </ul>
+            </Transition>
         )
     }
 
@@ -132,6 +158,7 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
     // ESC键
     const handleEsc = () => {
         setSuggestions([]);
+        setShowDropdown(false);
     };
 
     // 键盘按下事件
@@ -161,9 +188,9 @@ export const AutoComplete: FC<AutoCompleteProps> = (props) => {
                 { ...restProps }
             />
             {/* loading状态 */}
-            {
+            {/* {
                 loading && <ul><Icon icon="spinner" spin /></ul>
-            }
+            } */}
             {
                 suggestions.length && generateDropdown()
             }
